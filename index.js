@@ -8,7 +8,15 @@ app.use(function (req, res, next) {
   next()
 
 })
-//link ejs npm
+
+// start multi page routing
+const loginRoute = require("./routers/login")
+const useRouts = require("./routers/user")
+app.use('/user',useRouts);
+app.use('/login',loginRoute);
+// end multi page routing
+
+//start link ejs npm
 app.set("view engine", "ejs");
 // add public folder
 app.use(express.static("./public"));
