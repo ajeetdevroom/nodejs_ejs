@@ -5,9 +5,6 @@ const multer = require("multer");
 // create express server
 const app = express();
 
-// add folder path for uploading file 
-const upload = multer({dest:"uploads/"});
-
 //start link ejs npm
 app.set("view engine", "ejs");
 
@@ -22,8 +19,28 @@ app.get('/',  (req, res, next)=> {
   return res.render("index");
 });
 
-//api for upload
-app.post('/upload', upload.single('uploadFileElm'), (req, res,next)=> {
+// implement multer
+const storage = multer.diskStorage({
+  // add folder path for uploading file
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/files')
+  },
+  // add file name
+  filename: function (req, file, cb) {   
+    cb(null, `${file.fieldname}-${Date.now()}`)
+  }
+})
+const upload = multer({ storage: storage })
+
+// //api for single upload
+// app.post('/upload', upload.single('uploadFileElm'), (req, res,next)=> {
+//   console.log(req.body);
+//   console.log(req.file)
+//   return res.redirect("/")
+// });
+
+//api for muti files upload
+app.post('/upload', upload.fields([{name:"uploadFileElm"},{name:"uploadFileElmId2"}]), (req, res,next)=> {
   console.log(req.body);
   console.log(req.file)
   return res.redirect("/")
